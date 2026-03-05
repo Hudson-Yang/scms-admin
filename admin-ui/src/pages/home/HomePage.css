@@ -1,0 +1,25 @@
+.home {
+  min-height: calc(100vh - 56px); /* Header 높이만큼 빼기 */
+  background-color: #f4f7fb;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home__content {
+  text-align: center;
+}
+
+.home__title {
+  font-size: 56px;
+  font-weight: 700;
+  color: #2f4f8f;
+  margin: 0;
+}
+
+.home__subtitle {
+  margin-top: 16px;
+  font-size: 18px;
+  color: #5a7ec8;
+}

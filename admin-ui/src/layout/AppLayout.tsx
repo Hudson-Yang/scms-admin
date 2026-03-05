@@ -1,12 +1,11 @@
 import { Outlet } from "react-router-dom";
-import TopNavigation from "./TopNavigation";
+import TopNavigation from "./TopNavigation/TopNavigation";
 
 const AppLayout = () => {
   return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+    <div className="app-layout">
       <TopNavigation />
-
-      <div style={{ flex: 1 }}>
+      <div className="app-layout__body">
         <Outlet />
       </div>
     </div>
