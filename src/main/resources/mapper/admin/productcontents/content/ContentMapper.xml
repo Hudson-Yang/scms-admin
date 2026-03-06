@@ -10,5 +10,46 @@
 			mdf_dt
 		FROM scms_prod_conts_l
 	</select>
+	
+	<insert id="insertContent" parameterType="com.hong.scms.admin.productcontents.content.model.ContentModel">
+		INSERT INTO scms_prod_conts_l (
+			admn_disp_nm,
+			regr_id,
+			reg_dt,
+			mdfr_id,
+			mdf_dt	
+		) VALUES (
+			#{admnDispNm},
+			#{regrId},
+			NOW(),
+			#{regrId},
+			NOW()
+		)
+	</insert>
+	
+	<select id="selectContent" parameterType="Integer" resultType="com.hong.scms.admin.productcontents.content.model.ContentModel">
+		SELECT
+			prod_conts_id,
+			admn_disp_nm,
+			regr_id,
+			reg_dt,
+			mdfr_id,
+			mdf_dt
+		FROM scms_prod_conts_l
+		WHERE prod_conts_id = #{prodContsId}
+	</select>
+
+	<update id="updateContent" parameterType="com.hong.scms.admin.productcontents.content.model.ContentModel">
+		UPDATE scms_prod_conts_l
+		SET admn_disp_nm = #{admnDispNm},
+			mdfr_id = #{mdfrId},
+			mdf_dt = NOW()
+		WHERE prod_conts_id = #{prodContsId}
+	</update>
+	
+	<delete id="deleteContent" parameterType="Integer">
+		DELETE FROM scms_prod_conts_l
+		WHERE prod_conts_id = #{prodContsId}
+	</delete>
 
 </mapper>

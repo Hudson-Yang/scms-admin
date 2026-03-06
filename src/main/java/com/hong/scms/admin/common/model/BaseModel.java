@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BaseModel {
-    String regrId;
-    String regDt;
-    String mdfrId;
-    String mdfDt;
+    private String regrId;
+    private String regDt;
+    private String mdfrId;
+    private String mdfDt;
 }

@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ContentModel extends BaseModel {
-    Integer prodContsId;
-    String admnDispNm;
+    private Integer prodContsId;
+    private String admnDispNm;
 }

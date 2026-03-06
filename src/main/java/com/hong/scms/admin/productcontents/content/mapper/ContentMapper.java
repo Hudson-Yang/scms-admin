@@ -7,4 +7,13 @@ import com.hong.scms.admin.productcontents.content.model.ContentModel;
 @Mapper
 public interface ContentMapper {
     List<ContentModel> selectContentList();
+
+    void insertContent(ContentModel contentModel);
+
+    ContentModel selectContent(Integer prodContsId);
+
+    void updateContent(ContentModel contentModel);
+
+    void deleteContent(Integer prodContsId);
+
 }
