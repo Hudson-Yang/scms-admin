@@ -10,4 +10,6 @@ public class ContentLanguageModel extends ContentModel {
     String prodContsTitl;
     String prodContsDesc;
     String dfltLangYn;
+
+    String saveFlag;
 }

@@ -11,17 +11,13 @@
 		FROM scms_prod_conts_l
 	</select>
 	
-	<insert id="insertContent" parameterType="com.hong.scms.admin.productcontents.content.model.ContentModel">
+	<insert id="insertContent" parameterType="com.hong.scms.admin.productcontents.content.model.ContentModel" useGeneratedKeys="true" keyProperty="prodContsId">
 		INSERT INTO scms_prod_conts_l (
 			admn_disp_nm,
 			regr_id,
-			reg_dt,
-			mdfr_id,
-			mdf_dt	
+			reg_dt
 		) VALUES (
 			#{admnDispNm},
-			#{regrId},
-			NOW(),
 			#{regrId},
 			NOW()
 		)
@@ -50,6 +46,68 @@
 	<delete id="deleteContent" parameterType="Integer">
 		DELETE FROM scms_prod_conts_l
 		WHERE prod_conts_id = #{prodContsId}
+	</delete>
+	
+	<insert id="insertContentLanguageList" parameterType="com.hong.scms.admin.productcontents.content.model.ContentModel">
+		INSERT INTO scms_prod_conts_lang_l (
+			prod_conts_id,
+			lang_cd,
+			prod_conts_titl,
+			prod_conts_desc,
+			dflt_lang_yn,
+			regr_id,
+			reg_dt
+		) VALUES (
+		<foreach collection="languageList" item="lang" separator=",">
+		(
+			#{prodContsId},
+			#{lang.langCd},
+			#{lang.prodContsTitl},
+			#{lang.prodContsDesc},
+			#{regrId},
+			NOW()
+		)
+		</foreach>
+		)
+	</insert>
+	
+	<insert id="insertContentLanguage" parameterType="com.hong.scms.admin.productcontents.content.model.ContentLanguageModel">
+		INSERT INTO scms_prod_conts_lang
+		(
+			prod_conts_id,
+			lang_cd,
+			prod_conts_titl,
+			prod_conts_desc,
+			dflt_lang_yn,
+			regr_id,
+			reg_dt
+		) VALUES (
+			#{prodContsId},
+			#{langCd},
+			#{prodContsTitl},
+			#{prodContsDesc},
+			#{dfltLangYn},
+			#{regrId},
+			NOW()
+    	)
+	</insert>
+	
+	<update id="updateContentLanguage" parameterType="com.hong.scms.admin.productcontents.content.model.ContentLanguageModel">
+		UPDATE scms_prod_conts_lang
+		SET prod_conts_titl = #{prodContsTitl},
+			prod_conts_desc = #{prodContsDesc},
+			dflt_lang_yn = #{dfltLangYn},
+			mdfr_id = #{mdfrId},
+			mdf_dt = NOW()
+		WHERE prod_conts_id = #{prodContsId}
+			AND lang_cd = #{langCd}
+	</update>
+	
+	<delete id="deleteContentLanguage" parameterType="com.hong.scms.admin.productcontents.content.model.ContentLanguageModel">
+		DELETE
+		FROM scms_prod_conts_lang
+		WHERE prod_conts_id = #{prodContsId}
+			AND lang_cd = #{langCd}
 	</delete>
 
 </mapper>
