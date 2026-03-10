@@ -25,4 +25,6 @@ public interface ContentMapper {
 
     void insertContentLanguage(ContentLanguageModel contentLanguageModel);
 
+    void deleteContentLanguageByProdContsId(Integer prodContsId);
+
 }

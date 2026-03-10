@@ -56,12 +56,14 @@ class ContentTest {
         langModel0.setProdContsTitl("Junit English Title");
         langModel0.setProdContsDesc("Junit English Description.");
         langModel0.setDfltLangYn("Y");
+        langModel0.setRegrId(model.getRegrId());
 
         ContentLanguageModel langModel1 = new ContentLanguageModel();
         langModel1.setLangCd("KO_KR");
         langModel1.setProdContsTitl("Junit 한국어 제목");
         langModel1.setProdContsDesc("Junit 한국어 설명.");
         langModel1.setDfltLangYn("N");
+        langModel1.setRegrId(model.getRegrId());
 
         List<ContentLanguageModel> langList = new ArrayList<>();
         langList.add(langModel0);
@@ -79,8 +81,36 @@ class ContentTest {
     @DisplayName("Content 수정")
     void updateContent() throws Exception {
         ContentModel model = new ContentModel();
+        model.setProdContsId(102);
         model.setAdmnDispNm("Junit Test Update Admin Display Name");
         model.setMdfrId("Junit Update Tester");
+
+        ContentLanguageModel langInsertModel = new ContentLanguageModel();
+        langInsertModel.setLangCd("FR_fr");
+        langInsertModel.setProdContsTitl("Junit France Title");
+        langInsertModel.setProdContsDesc("Junit France Description.");
+        langInsertModel.setDfltLangYn("Y");
+        langInsertModel.setSaveFlag("I");
+
+        ContentLanguageModel langUpdateModel = new ContentLanguageModel();
+        langUpdateModel.setProdContsId(model.getProdContsId());
+        langUpdateModel.setLangCd("KO_KR");
+        langUpdateModel.setProdContsTitl("Junit 한국어 갱신 타이틀");
+        langUpdateModel.setProdContsDesc("Junit 한국어 갱신 설명.");
+        langUpdateModel.setDfltLangYn("N");
+        langUpdateModel.setSaveFlag("U");
+
+        ContentLanguageModel langDeleteModel = new ContentLanguageModel();
+        langDeleteModel.setProdContsId(model.getProdContsId());
+        langDeleteModel.setLangCd("EN_US");
+        langDeleteModel.setSaveFlag("D");
+
+        List<ContentLanguageModel> langUpdateList = new ArrayList<>();
+        langUpdateList.add(langInsertModel);
+        langUpdateList.add(langUpdateModel);
+        langUpdateList.add(langDeleteModel);
+
+        model.setLanguageList(langUpdateList);
 
         String body = objectMapper.writeValueAsString(model);
 

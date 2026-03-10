@@ -35,11 +35,12 @@ public class ContentService {
     public void updateContent(ContentModel contentModel) {
         contentMapper.updateContent(contentModel);
 
-        // 여기에 따로 language 메소드 빼서 만든다음에 호출하기
+        saveContentLanguageList(contentModel);
     }
 
     @Transactional
     public void deleteContent(Integer prodContsId) {
+        contentMapper.deleteContentLanguageByProdContsId(prodContsId);
         contentMapper.deleteContent(prodContsId);
     }
 
@@ -52,12 +53,14 @@ public class ContentService {
         languageList.stream().filter(l -> "D".equals(l.getSaveFlag()))
                 .forEach(contentMapper::deleteContentLanguage);
 
-        languageList.stream().filter(l -> "U".equals(l.getSaveFlag()))
-                .forEach(contentMapper::updateContentLanguage);
+        languageList.stream().filter(l -> "U".equals(l.getSaveFlag())).forEach(l -> {
+            l.setMdfrId(contentModel.getMdfrId());
+            contentMapper.updateContentLanguage(l);
+        });
 
         languageList.stream().filter(l -> "I".equals(l.getSaveFlag())).forEach(l -> {
             l.setProdContsId(contentModel.getProdContsId());
-            l.setMdfrId(contentModel.getMdfrId());
+            l.setRegrId(contentModel.getMdfrId());
             contentMapper.insertContentLanguage(l);
         });
     }

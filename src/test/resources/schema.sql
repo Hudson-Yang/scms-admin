@@ -16,6 +16,7 @@ CREATE TABLE scms_prod_conts_lang_l (
 	lang_cd		 VARCHAR(10),
 	prod_conts_titl VARCHAR(200),
 	prod_conts_desc VARCHAR(200),
+	dflt_lang_yn VARCHAR(1),
 	regr_id		VARCHAR(50),
 	reg_dt       TIMESTAMP    NOT NULL,
     mdfr_id       VARCHAR(50),

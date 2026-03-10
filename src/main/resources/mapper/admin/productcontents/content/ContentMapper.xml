@@ -57,22 +57,22 @@
 			dflt_lang_yn,
 			regr_id,
 			reg_dt
-		) VALUES (
+		) VALUES 
 		<foreach collection="languageList" item="lang" separator=",">
 		(
 			#{prodContsId},
 			#{lang.langCd},
 			#{lang.prodContsTitl},
 			#{lang.prodContsDesc},
+			#{lang.dfltLangYn},
 			#{regrId},
 			NOW()
 		)
 		</foreach>
-		)
 	</insert>
 	
 	<insert id="insertContentLanguage" parameterType="com.hong.scms.admin.productcontents.content.model.ContentLanguageModel">
-		INSERT INTO scms_prod_conts_lang
+		INSERT INTO scms_prod_conts_lang_l
 		(
 			prod_conts_id,
 			lang_cd,
@@ -93,7 +93,7 @@
 	</insert>
 	
 	<update id="updateContentLanguage" parameterType="com.hong.scms.admin.productcontents.content.model.ContentLanguageModel">
-		UPDATE scms_prod_conts_lang
+		UPDATE scms_prod_conts_lang_l
 		SET prod_conts_titl = #{prodContsTitl},
 			prod_conts_desc = #{prodContsDesc},
 			dflt_lang_yn = #{dfltLangYn},
@@ -105,9 +105,15 @@
 	
 	<delete id="deleteContentLanguage" parameterType="com.hong.scms.admin.productcontents.content.model.ContentLanguageModel">
 		DELETE
-		FROM scms_prod_conts_lang
+		FROM scms_prod_conts_lang_l
 		WHERE prod_conts_id = #{prodContsId}
 			AND lang_cd = #{langCd}
+	</delete>
+
+	<delete id="deleteContentLanguageByProdContsId" parameterType="Integer">
+		DELETE
+		FROM scms_prod_conts_lang_l
+		WHERE prod_conts_id = #{prodContsId}
 	</delete>
 
 </mapper>
