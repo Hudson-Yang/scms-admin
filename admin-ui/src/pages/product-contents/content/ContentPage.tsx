@@ -1,31 +1,24 @@
 import { Button, Table, Input } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useState } from "react";
-import "./ContentPage.css";
+import { useQuery } from "@tanstack/react-query";
 
-interface ContentItem {
-  key: number;
-  thumbnail: string;
-  prodContsId: number;
-  AdmnDispNm: string;
-  mdfrId: string;
-  mdfDt: string;
-}
+import { getContentList } from "./api/contentApi";
+import type { Content } from "./types/ContentType";
+
+import "./ContentPage.css";
 
 const { Search } = Input;
 
 const ContentPage = () => {
   const [searchText, setSearchText] = useState("");
 
-  const columns: ColumnsType<ContentItem> = [
-    {
-      title: "Thumbnail",
-      dataIndex: "thumbnail",
-      key: "thumbnail",
-      render: (value: string) => (
-        <div className="content-thumbnail">{value}</div>
-      ),
-    },
+  const { data, isLoading } = useQuery({
+    queryKey: ["contents"],
+    queryFn: getContentList,
+  });
+
+  const columns: ColumnsType<Content> = [
     {
       title: "Content ID",
       dataIndex: "prodContsId",
@@ -33,8 +26,8 @@ const ContentPage = () => {
     },
     {
       title: "Display Name",
-      dataIndex: "AdmnDispNm",
-      key: "AdmnDispNm",
+      dataIndex: "admnDispNm",
+      key: "admnDispNm",
     },
     {
       title: "Modified By",
@@ -47,21 +40,6 @@ const ContentPage = () => {
       key: "mdfDt",
     },
   ];
-
-  const data: ContentItem[] = Array.from({ length: 23 }).map((_, index) => ({
-    key: index,
-    thumbnail: "IMG",
-    prodContsId: 1000 + index,
-    AdmnDispNm: `Sample Content ${index + 1}`,
-    mdfrId: "admin",
-    mdfDt: "2026-03-04",
-  }));
-
-  const filteredData = data.filter(
-    (item) =>
-      item.AdmnDispNm.toLowerCase().includes(searchText.toLowerCase()) ||
-      item.prodContsId.toString().includes(searchText),
-  );
 
   return (
     <div className="content-page">
@@ -81,7 +59,9 @@ const ContentPage = () => {
       <div className="content-page__table">
         <Table
           columns={columns}
-          dataSource={filteredData}
+          dataSource={data}
+          rowKey="prodContsId"
+          loading={isLoading}
           pagination={{ pageSize: 10 }}
         />
       </div>
