@@ -35,13 +35,13 @@ class ContentTest {
     @Test
     @DisplayName("Content 목록 조회")
     void getContentList() throws Exception {
-        mockMvc.perform(get("/product-content/content")).andExpect(status().isOk());
+        mockMvc.perform(get("/admin/product-content/content")).andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Content 상세 조회")
     void getContent() throws Exception {
-        mockMvc.perform(get("/product-content/content/101")).andExpect(status().isOk());
+        mockMvc.perform(get("/admin/product-content/content/101")).andExpect(status().isOk());
     }
 
     @Test
@@ -73,8 +73,8 @@ class ContentTest {
 
         String body = objectMapper.writeValueAsString(model);
 
-        mockMvc.perform(post("/product-content/content").contentType(MediaType.APPLICATION_JSON)
-                .content(body)).andExpect(status().isOk());
+        mockMvc.perform(post("/admin/product-content/content")
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isOk());
     }
 
     @Test
@@ -114,14 +114,14 @@ class ContentTest {
 
         String body = objectMapper.writeValueAsString(model);
 
-        mockMvc.perform(put("/product-content/content/102").contentType(MediaType.APPLICATION_JSON)
-                .content(body)).andExpect(status().isOk());
+        mockMvc.perform(put("/admin/product-content/content/102")
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Content 삭제")
     void deleteContent() throws Exception {
-        mockMvc.perform(delete("/product-content/content/103")).andExpect(status().isOk());
+        mockMvc.perform(delete("/admin/product-content/content/103")).andExpect(status().isOk());
     }
 
 

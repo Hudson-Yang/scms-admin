@@ -13,7 +13,7 @@ import com.hong.scms.admin.productcontents.content.model.ContentModel;
 import com.hong.scms.admin.productcontents.content.service.ContentService;
 
 @RestController
-@RequestMapping("/product-content/content")
+@RequestMapping("/admin/product-content/content")
 public class ContentController {
 
     private final ContentService contentService;
