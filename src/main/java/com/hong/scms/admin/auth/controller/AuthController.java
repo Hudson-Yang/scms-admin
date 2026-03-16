@@ -1,6 +1,5 @@
 package com.hong.scms.admin.auth.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,12 +13,13 @@ import com.hong.scms.admin.auth.annotation.CurrentUser;
 import com.hong.scms.admin.auth.model.LoginRequest;
 import com.hong.scms.admin.auth.model.SignupRequest;
 import com.hong.scms.admin.auth.service.AuthService;
+import com.hong.scms.admin.common.model.BaseResponse;
 import com.hong.scms.admin.management.user.model.UserModel;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/admin/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -27,28 +27,31 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request,
-            HttpServletRequest httpRequest) {
+    public BaseResponse login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+        try {
 
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        request.getLoginId(), request.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            Authentication authentication =
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                            request.getLoginId(), request.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         httpRequest.getSession(true);
 
-        return ResponseEntity.ok().build();
+        return new BaseResponse();
     }
 
     @GetMapping("/me")
-    public UserModel me(@CurrentUser UserModel user) {
-        return user;
+    public BaseResponse me(@CurrentUser UserModel user) {
+        return new BaseResponse(user);
     }
 
     @PostMapping("/sign-up")
-    public void signup(@RequestBody SignupRequest request) {
+    public BaseResponse signup(@RequestBody SignupRequest request) {
         authService.signup(request);
+        return new BaseResponse();
     }
 
 }

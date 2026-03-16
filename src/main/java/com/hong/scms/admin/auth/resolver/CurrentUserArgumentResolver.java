@@ -30,8 +30,13 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
             return null;
         }
 
-        AdminUserDetails userDetails = (AdminUserDetails) auth.getPrincipal();
+        Object principal = auth.getPrincipal();
 
+        if (!(principal instanceof AdminUserDetails)) {
+            return null;
+        }
+
+        AdminUserDetails userDetails = (AdminUserDetails) principal;
         return userDetails.getUser();
     }
 }

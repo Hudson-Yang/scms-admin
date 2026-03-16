@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hong.scms.admin.management.user.mapper.UserMapper">
 
-	<select id="findByLoginId" resultType="com.hong.scms.admin.management.user.model.UserModel">
+	<select id="findByLoginId" parameterType="String" resultType="com.hong.scms.admin.management.user.model.UserModel">
     	SELECT
         	adm_user_id,
         	login_id,
@@ -14,14 +14,13 @@
     	WHERE login_id = #{loginId}
 	</select>
 	
-	<insert id="insertUser">
+	<insert id="insertUser" parameterType="com.hong.scms.admin.management.user.model.UserModel">
 	    INSERT INTO scms_adm_user_m (
         	login_id,
         	hash_pw,
         	name,
         	role_cd,
         	user_stat_cd,
-        	regr_id,
         	reg_dt
     	) VALUES (
         	#{loginId},
@@ -29,10 +28,8 @@
         	#{name},
         	#{roleCd},
         	#{userStatCd},
-        	'SYSTEM',
         	NOW()
 	    )
-
-</insert>
+	</insert>
 	
 </mapper>

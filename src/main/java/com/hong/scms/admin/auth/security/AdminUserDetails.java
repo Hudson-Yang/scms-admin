@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.hong.scms.admin.management.user.model.UserModel;
 
 public class AdminUserDetails implements UserDetails {
-
+    private static final long serialVersionUID = 1L;
     private final UserModel userModel;
 
     public AdminUserDetails(UserModel userModel) {

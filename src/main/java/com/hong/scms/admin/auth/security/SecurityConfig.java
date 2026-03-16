@@ -3,6 +3,7 @@ package com.hong.scms.admin.auth.security;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,14 +24,11 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/admin/auth/**").permitAll()
-                        .requestMatchers("GET", "/admin/**").permitAll()
-                        .requestMatchers("POST", "/admin/**").authenticated()
-                        .requestMatchers("PUT", "/admin/**").authenticated()
-                        .requestMatchers("DELETE", "/admin/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/admin/**").permitAll()
                         .requestMatchers("/admin/users/**").hasRole("SUPER_ADMIN").anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.maximumSessions(1))
-                .formLogin(form -> form.disable()).logout(logout -> logout.disable());;
+                .formLogin(form -> form.disable()).logout(logout -> logout.disable());
 
         return http.build();
     }
@@ -43,11 +41,13 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
             throws Exception {
+
         return configuration.getAuthenticationManager();
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
@@ -61,5 +61,4 @@ public class SecurityConfig {
 
         return source;
     }
-
 }

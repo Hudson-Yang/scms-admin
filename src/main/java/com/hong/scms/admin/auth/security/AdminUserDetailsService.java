@@ -16,7 +16,6 @@ public class AdminUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-
         UserModel user = userMapper.findByLoginId(loginId);
 
         if (user == null) {

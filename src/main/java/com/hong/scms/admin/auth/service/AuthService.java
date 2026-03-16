@@ -19,7 +19,6 @@ public class AuthService {
     @Transactional
     public void signup(SignupRequest request) {
         UserModel user = new UserModel();
-
         user.setLoginId(request.getLoginId());
         user.setHashPw(passwordEncoder.encode(request.getPassword()));
         user.setName(request.getName());
