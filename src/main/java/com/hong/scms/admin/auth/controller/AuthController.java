@@ -3,7 +3,9 @@ package com.hong.scms.admin.auth.controller;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,8 @@ import com.hong.scms.admin.auth.service.AuthService;
 import com.hong.scms.admin.common.model.BaseResponse;
 import com.hong.scms.admin.management.user.model.UserModel;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,18 +31,20 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public BaseResponse login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
-        try {
+    public BaseResponse login(@Valid @RequestBody LoginRequest request,
+            HttpServletRequest httpRequest) {
 
-            Authentication authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                            request.getLoginId(), request.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                        request.getLoginId(), request.getPassword()));
 
-        httpRequest.getSession(true);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+
+        HttpSession session = httpRequest.getSession(true);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                context);
 
         return new BaseResponse();
     }
@@ -49,9 +55,8 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public BaseResponse signup(@RequestBody SignupRequest request) {
+    public BaseResponse signup(@Valid @RequestBody SignupRequest request) {
         authService.signup(request);
         return new BaseResponse();
     }
-
 }

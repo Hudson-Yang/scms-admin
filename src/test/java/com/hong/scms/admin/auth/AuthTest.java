@@ -1,7 +1,9 @@
 package com.hong.scms.admin.auth;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.junit.jupiter.api.Test;
@@ -31,25 +33,30 @@ class AuthTest {
 
     @Test
     void signup_login_me_flow_test() throws Exception {
-
         SignupRequest signup = new SignupRequest();
         signup.setLoginId("junit_user");
         signup.setPassword("1234");
         signup.setName("테스트유저");
 
-        mockMvc.perform(post("/admin/auth/sign-up").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signup))).andExpect(status().isOk());
+        mockMvc.perform(
+                post("/admin/auth/sign-up").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(signup)))
+                .andDo(print()).andExpect(status().isOk());
 
         LoginRequest login = new LoginRequest();
         login.setLoginId("junit_user");
         login.setPassword("1234");
 
         MockHttpSession session = (MockHttpSession) mockMvc
-                .perform(post("/admin/auth/login").contentType(MediaType.APPLICATION_JSON)
+                .perform(post("/admin/auth/login").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(login)))
-                .andExpect(status().isOk()).andReturn().getRequest().getSession();
+                .andDo(print()).andExpect(status().isOk()).andReturn().getRequest()
+                .getSession(false);
 
-        mockMvc.perform(get("/admin/auth/me").session(session)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.loginId").value("junit_user"));
+        mockMvc.perform(get("/admin/auth/me").session(session)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.loginId").value("junit_user"))
+                .andExpect(jsonPath("$.data.name").value("테스트유저"));
     }
 }

@@ -24,19 +24,19 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth == null) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
             return null;
         }
 
-        Object principal = auth.getPrincipal();
+        Object principal = authentication.getPrincipal();
 
-        if (!(principal instanceof AdminUserDetails)) {
+        if (!(principal instanceof AdminUserDetails userDetails)) {
             return null;
         }
 
-        AdminUserDetails userDetails = (AdminUserDetails) principal;
         return userDetails.getUser();
     }
 }
