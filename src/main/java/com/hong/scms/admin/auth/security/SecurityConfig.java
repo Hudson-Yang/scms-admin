@@ -22,10 +22,10 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/admin/auth/**").permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/error").permitAll()
+                        .requestMatchers("/admin/auth/**").permitAll()
                         .requestMatchers("/admin/management/users/**").hasRole("SUPER_ADMIN")
                         .requestMatchers("/admin/**").authenticated().anyRequest().permitAll())
-                .sessionManagement(session -> session.maximumSessions(1))
                 .formLogin(form -> form.disable()).logout(logout -> logout.disable());
 
         return http.build();

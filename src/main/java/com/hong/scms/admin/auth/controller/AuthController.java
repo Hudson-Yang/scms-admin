@@ -19,7 +19,6 @@ import com.hong.scms.admin.common.model.BaseResponse;
 import com.hong.scms.admin.management.user.model.UserModel;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,9 +30,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public BaseResponse login(@Valid @RequestBody LoginRequest request,
-            HttpServletRequest httpRequest) {
-
+    public BaseResponse login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                         request.getLoginId(), request.getPassword()));
@@ -55,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public BaseResponse signup(@Valid @RequestBody SignupRequest request) {
+    public BaseResponse signup(@RequestBody SignupRequest request) {
         authService.signup(request);
         return new BaseResponse();
     }
