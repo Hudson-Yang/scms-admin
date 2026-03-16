@@ -3,32 +3,32 @@
 <mapper namespace="com.hong.scms.admin.management.user.mapper.UserMapper">
 
 	<select id="findByLoginId" parameterType="String" resultType="com.hong.scms.admin.management.user.model.UserModel">
-    	SELECT
-        	adm_user_id,
-        	login_id,
-        	hash_pw,
-        	name,
-        	role_cd,
-        	user_stat_cd
-    	FROM scms_adm_user_m
-    	WHERE login_id = #{loginId}
+		SELECT
+			adm_user_id,
+			login_id,
+			hash_pw,
+			name,
+			role_cd,
+			user_stat_cd
+		FROM scms_adm_user_m
+		WHERE login_id = #{loginId}
 	</select>
 	
 	<insert id="insertUser" parameterType="com.hong.scms.admin.management.user.model.UserModel">
-	    INSERT INTO scms_adm_user_m (
-        	login_id,
-        	hash_pw,
-        	name,
-        	role_cd,
-        	user_stat_cd,
-        	reg_dt
-    	) VALUES (
-        	#{loginId},
-        	#{hashPw},
-        	#{name},
-        	#{roleCd},
-        	#{userStatCd},
-        	NOW()
+		INSERT INTO scms_adm_user_m (
+			login_id,
+			hash_pw,
+			name,
+			role_cd,
+			user_stat_cd,
+			reg_dt
+		) VALUES (
+			#{loginId},
+			#{hashPw},
+			#{name},
+			#{roleCd},
+			#{userStatCd},
+			NOW()
 	    )
 	</insert>
 	
