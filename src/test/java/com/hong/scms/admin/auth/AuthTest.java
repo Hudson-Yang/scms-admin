@@ -58,4 +58,33 @@ class AuthTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.loginId").value("junit_user"));
     }
+
+    @Test
+    void logout_flow_test() throws Exception {
+        SignupRequest signup = new SignupRequest();
+        signup.setLoginId("logout_user");
+        signup.setPassword("1234");
+        signup.setName("로그아웃테스트");
+
+        mockMvc.perform(
+                post("/admin/auth/sign-up").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(signup)))
+                .andExpect(status().isOk());
+
+        LoginRequest login = new LoginRequest();
+        login.setLoginId("logout_user");
+        login.setPassword("1234");
+
+        MockHttpSession session = (MockHttpSession) mockMvc
+                .perform(post("/admin/auth/login").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(login)))
+                .andExpect(status().isOk()).andReturn().getRequest().getSession(false);
+
+        mockMvc.perform(post("/admin/auth/logout").with(csrf()).session(session)).andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/admin/auth/me").session(session)).andDo(print())
+                .andExpect(status().isForbidden());
+    }
 }

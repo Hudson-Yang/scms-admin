@@ -23,7 +23,9 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/error").permitAll()
-                        .requestMatchers("/admin/auth/**").permitAll()
+                        .requestMatchers("/admin/auth/login", "/admin/auth/sign-up",
+                                "/admin/auth/logout")
+                        .permitAll().requestMatchers("/admin/auth/me").authenticated()
                         .requestMatchers("/admin/management/users/**").hasRole("SUPER_ADMIN")
                         .requestMatchers("/admin/**").authenticated().anyRequest().permitAll())
                 .formLogin(form -> form.disable()).logout(logout -> logout.disable());

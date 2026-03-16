@@ -56,4 +56,18 @@ public class AuthController {
         authService.signup(request);
         return new BaseResponse();
     }
+
+    @PostMapping("/logout")
+    public BaseResponse logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            session.invalidate();
+        }
+
+        SecurityContextHolder.clearContext();
+
+        return new BaseResponse();
+    }
+
 }

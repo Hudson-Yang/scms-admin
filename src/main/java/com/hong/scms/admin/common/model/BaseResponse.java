@@ -1,6 +1,5 @@
 package com.hong.scms.admin.common.model;
 
-import org.springframework.web.ErrorResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,5 +28,4 @@ public class BaseResponse {
     public BaseResponse(Object data) {
         this.data = data;
     }
-
 }
