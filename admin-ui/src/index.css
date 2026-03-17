@@ -37,3 +37,29 @@ button {
   font-family: inherit;
   cursor: pointer;
 }
+
+:root {
+  --scms-primary: #2f4f8f;
+  --scms-primary-hover: #3d5da1;
+  --scms-primary-active: #26427a;
+  --scms-page-bg: #f4f6fb;
+}
+
+/* antd primary button */
+.ant-btn-color-primary,
+.ant-btn-variant-solid {
+  background-color: var(--scms-primary) !important;
+  border-color: var(--scms-primary) !important;
+}
+
+.ant-btn-color-primary:hover,
+.ant-btn-variant-solid:hover {
+  background-color: var(--scms-primary-hover) !important;
+  border-color: var(--scms-primary-hover) !important;
+}
+
+.ant-btn-color-primary:active,
+.ant-btn-variant-solid:active {
+  background-color: var(--scms-primary-active) !important;
+  border-color: var(--scms-primary-active) !important;
+}

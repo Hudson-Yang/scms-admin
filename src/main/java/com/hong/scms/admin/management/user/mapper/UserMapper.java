@@ -7,5 +7,7 @@ import com.hong.scms.admin.management.user.model.UserModel;
 public interface UserMapper {
     UserModel findByLoginId(String loginId);
 
+    int countByLoginId(String loginId);
+
     void insertUser(UserModel user);
 }

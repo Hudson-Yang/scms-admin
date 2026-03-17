@@ -14,6 +14,12 @@
 		WHERE login_id = #{loginId}
 	</select>
 	
+	<select id="countByLoginId" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM scms_adm_user_m
+		WHERE login_id = #{loginId}
+	</select>
+	
 	<insert id="insertUser" parameterType="com.hong.scms.admin.management.user.model.UserModel">
 		INSERT INTO scms_adm_user_m (
 			login_id,
