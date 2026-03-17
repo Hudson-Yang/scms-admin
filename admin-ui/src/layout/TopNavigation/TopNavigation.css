@@ -3,8 +3,17 @@
   background-color: #2f4f8f;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 24px;
   box-sizing: border-box;
+}
+
+/* ===== Left Area ===== */
+
+.top-nav__left {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 /* ===== Logo ===== */
@@ -33,10 +42,27 @@
   margin-left: 40px;
 }
 
+/* ===== Auth ===== */
+
+.top-nav__auth {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+}
+
+.top-nav__user {
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
 /* ===== Link ===== */
 
 .top-nav__link {
-  position: relative; /* ★ 필수 */
+  position: relative;
   display: flex;
   align-items: center;
   height: 100%;
@@ -50,7 +76,7 @@
   content: "";
   position: absolute;
   left: 0;
-  bottom: 10px; /* 위치 미세조정 */
+  bottom: 10px;
   width: 100%;
   height: 2px;
   background-color: white;
@@ -62,4 +88,21 @@
 /* active 상태 */
 .top-nav__link.active::after {
   transform: scaleX(1);
+}
+
+/* ===== Logout Button ===== */
+
+.top-nav__button {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  background: transparent;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.top-nav__button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
 }

@@ -1,0 +1,29 @@
+.auth-page {
+  min-height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #f4f6fb;
+}
+
+.auth-card {
+  width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(47, 79, 143, 0.08);
+}
+
+.auth-page__footer {
+  text-align: center;
+}
+
+.auth-page__link {
+  color: #2f4f8f;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-page__link:hover {
+  color: #3b5ca0;
+}

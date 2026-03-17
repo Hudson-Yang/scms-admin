@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import TopNavigation from "./TopNavigation/TopNavigation";
+import "./AppLayout.css";
 
 const AppLayout = () => {
   return (
