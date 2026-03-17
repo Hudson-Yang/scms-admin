@@ -1,5 +1,6 @@
 package com.hong.scms.admin.productcontents;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import com.hong.scms.admin.productcontents.content.model.ContentModel;
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
+@WithMockUser(username = "junit_admin", roles = {"SUPER_ADMIN"})
 class ContentTest {
 
     @Autowired
@@ -49,21 +52,18 @@ class ContentTest {
     void createContent() throws Exception {
         ContentModel model = new ContentModel();
         model.setAdmnDispNm("Junit Test Admin Display Name");
-        model.setRegrId("Junit Tester");
 
         ContentLanguageModel langModel0 = new ContentLanguageModel();
         langModel0.setLangCd("EN_US");
         langModel0.setProdContsTitl("Junit English Title");
         langModel0.setProdContsDesc("Junit English Description.");
         langModel0.setDfltLangYn("Y");
-        langModel0.setRegrId(model.getRegrId());
 
         ContentLanguageModel langModel1 = new ContentLanguageModel();
         langModel1.setLangCd("KO_KR");
         langModel1.setProdContsTitl("Junit 한국어 제목");
         langModel1.setProdContsDesc("Junit 한국어 설명.");
         langModel1.setDfltLangYn("N");
-        langModel1.setRegrId(model.getRegrId());
 
         List<ContentLanguageModel> langList = new ArrayList<>();
         langList.add(langModel0);
@@ -73,7 +73,7 @@ class ContentTest {
 
         String body = objectMapper.writeValueAsString(model);
 
-        mockMvc.perform(post("/admin/product-content/content")
+        mockMvc.perform(post("/admin/product-content/content").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isOk());
     }
 
@@ -83,7 +83,6 @@ class ContentTest {
         ContentModel model = new ContentModel();
         model.setProdContsId(102);
         model.setAdmnDispNm("Junit Test Update Admin Display Name");
-        model.setMdfrId("Junit Update Tester");
 
         ContentLanguageModel langInsertModel = new ContentLanguageModel();
         langInsertModel.setLangCd("FR_fr");
@@ -114,15 +113,14 @@ class ContentTest {
 
         String body = objectMapper.writeValueAsString(model);
 
-        mockMvc.perform(put("/admin/product-content/content/102")
+        mockMvc.perform(put("/admin/product-content/content/102").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Content 삭제")
     void deleteContent() throws Exception {
-        mockMvc.perform(delete("/admin/product-content/content/103")).andExpect(status().isOk());
+        mockMvc.perform(delete("/admin/product-content/content/103").with(csrf()))
+                .andExpect(status().isOk());
     }
-
-
 }

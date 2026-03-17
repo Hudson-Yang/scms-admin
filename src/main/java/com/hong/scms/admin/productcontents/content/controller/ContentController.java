@@ -1,5 +1,6 @@
 package com.hong.scms.admin.productcontents.content.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,11 @@ public class ContentController {
     }
 
     @PostMapping("")
-    public BaseResponse createContent(@RequestBody ContentModel contentModel) {
+    public BaseResponse createContent(@RequestBody ContentModel contentModel,
+            Authentication authentication) {
+        String loginId = authentication.getName();
+
+        contentModel.setRegrId(loginId);
         contentService.createContent(contentModel);
         return new BaseResponse();
     }
@@ -40,16 +45,20 @@ public class ContentController {
 
     @PutMapping("/{prodContsId}")
     public BaseResponse updateContent(@PathVariable Integer prodContsId,
-            @RequestBody ContentModel contentModel) {
+            @RequestBody ContentModel contentModel, Authentication authentication) {
+        String loginId = authentication.getName();
+
+        contentModel.setProdContsId(prodContsId);
+        contentModel.setMdfrId(loginId);
+
         contentService.updateContent(contentModel);
         return new BaseResponse();
     }
 
     @DeleteMapping("/{prodContsId}")
-    public BaseResponse updateContent(@PathVariable Integer prodContsId) {
+    public BaseResponse deleteContent(@PathVariable Integer prodContsId) {
         contentService.deleteContent(prodContsId);
         return new BaseResponse();
     }
-
 
 }
