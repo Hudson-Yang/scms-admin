@@ -6,13 +6,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,6 @@ import com.hong.scms.admin.auth.model.SignupRequest;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-@WithMockUser(username = "content_admin", roles = {"SUPER_ADMIN"})
 class AuthTest {
 
     @Autowired
@@ -32,6 +32,11 @@ class AuthTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
 
     @Test
     void signup_login_me_flow_test() throws Exception {
@@ -87,6 +92,6 @@ class AuthTest {
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/admin/auth/me").session(session)).andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data").doesNotExist());
     }
 }

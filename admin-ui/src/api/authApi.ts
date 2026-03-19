@@ -19,9 +19,12 @@ export const getMe = async (): Promise<MeResponse | null> => {
     const response = await apiClient.get<ApiResponse<MeResponse>>("/auth/me");
     return response.data.data;
   } catch (error: any) {
-    if (error?.response?.status === 401) {
+    const status = error?.response?.status;
+
+    if (status === 401 || status === 403) {
       return null;
     }
+
     throw error;
   }
 };

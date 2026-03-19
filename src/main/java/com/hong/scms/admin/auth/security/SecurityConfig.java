@@ -24,10 +24,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/error").permitAll()
                         .requestMatchers("/admin/auth/login", "/admin/auth/sign-up",
-                                "/admin/auth/logout")
-                        .permitAll().requestMatchers("/admin/auth/me").authenticated()
-                        .requestMatchers("/admin/management/users/**").hasRole("SUPER_ADMIN")
-                        .requestMatchers("/admin/**").authenticated().anyRequest().permitAll())
+                                "/admin/auth/logout", "/admin/auth/me")
+                        .permitAll().requestMatchers("/admin/management/users/**")
+                        .hasRole("SUPER_ADMIN").requestMatchers("/admin/**").authenticated()
+                        .anyRequest().permitAll())
                 .formLogin(form -> form.disable()).logout(logout -> logout.disable());
 
         return http.build();
@@ -47,6 +47,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));

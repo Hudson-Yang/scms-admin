@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.hong.scms.admin.auth.annotation.CurrentUser;
 import com.hong.scms.admin.auth.model.LoginRequest;
 import com.hong.scms.admin.auth.model.SignupRequest;
+import com.hong.scms.admin.auth.security.AdminUserDetails;
 import com.hong.scms.admin.auth.service.AuthService;
 import com.hong.scms.admin.common.model.BaseResponse;
-import com.hong.scms.admin.management.user.model.UserModel;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +46,23 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public BaseResponse me(@CurrentUser UserModel user) {
-        return new BaseResponse(user);
+    public BaseResponse me(Authentication authentication) {
+
+        if (authentication == null) {
+            return new BaseResponse(null);
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof String && "anonymousUser".equals(principal)) {
+            return new BaseResponse(null);
+        }
+
+        if (principal instanceof AdminUserDetails userDetails) {
+            return new BaseResponse(userDetails.getUser());
+        }
+
+        return new BaseResponse(null);
     }
 
     @PostMapping("/sign-up")
@@ -60,7 +74,6 @@ public class AuthController {
     @PostMapping("/logout")
     public BaseResponse logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-
         if (session != null) {
             session.invalidate();
         }
@@ -69,5 +82,4 @@ public class AuthController {
 
         return new BaseResponse();
     }
-
 }
