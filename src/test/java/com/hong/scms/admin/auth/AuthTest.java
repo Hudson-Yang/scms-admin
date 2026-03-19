@@ -62,8 +62,8 @@ class AuthTest {
                 .getSession(false);
 
         mockMvc.perform(get("/admin/auth/me").session(session)).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.loginId").value("junit_user"));
+                .andExpect(status().isOk()).andExpect(jsonPath("$.data.name").value("테스트유저"))
+                .andExpect(jsonPath("$.data.roleCd").value("DELETE"));
     }
 
     @Test

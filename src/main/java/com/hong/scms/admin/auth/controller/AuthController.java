@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hong.scms.admin.auth.model.LoginRequest;
+import com.hong.scms.admin.auth.model.MeResponse;
 import com.hong.scms.admin.auth.model.SignupRequest;
 import com.hong.scms.admin.auth.security.AdminUserDetails;
 import com.hong.scms.admin.auth.service.AuthService;
 import com.hong.scms.admin.common.model.BaseResponse;
+import com.hong.scms.admin.management.user.model.UserModel;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +61,9 @@ public class AuthController {
         }
 
         if (principal instanceof AdminUserDetails userDetails) {
-            return new BaseResponse(userDetails.getUser());
+            UserModel user = userDetails.getUser();
+            MeResponse response = new MeResponse(user.getName(), user.getRoleCd());
+            return new BaseResponse(response);
         }
 
         return new BaseResponse(null);
