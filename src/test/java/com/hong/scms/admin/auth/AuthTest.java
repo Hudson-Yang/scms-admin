@@ -97,7 +97,6 @@ class AuthTest {
 
     @Test
     void signup_duplicate_loginId_test() throws Exception {
-        // 첫 번째 회원가입 요청
         SignupRequest signup = new SignupRequest();
         signup.setLoginId("duplicate_user");
         signup.setPassword("1234");
@@ -108,7 +107,6 @@ class AuthTest {
                         .content(objectMapper.writeValueAsString(signup)))
                 .andDo(print()).andExpect(status().isOk());
 
-        // 같은 loginId로 두 번째 회원가입 요청
         SignupRequest duplicateSignup = new SignupRequest();
         duplicateSignup.setLoginId("duplicate_user");
         duplicateSignup.setPassword("5678");
@@ -117,14 +115,9 @@ class AuthTest {
         mockMvc.perform(
                 post("/admin/auth/sign-up").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(duplicateSignup)))
-                .andDo(print())
-                // 이미 사용 중인 loginId 이므로 409 기대
-                .andExpect(status().isConflict())
-                // 공통 응답 구조에서 실패 상태 확인
+                .andDo(print()).andExpect(status().isConflict())
                 .andExpect(jsonPath("$.stat").value("fail"))
-                // 에러 코드 확인
                 .andExpect(jsonPath("$.err.code").value(409))
-                // 에러 메시지 확인
                 .andExpect(jsonPath("$.err.msg").value("이미 사용 중인 로그인 아이디입니다."));
     }
 
