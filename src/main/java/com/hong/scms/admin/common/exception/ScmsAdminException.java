@@ -15,7 +15,7 @@ public class ScmsAdminException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public ScmsAdminException(String message, ErrorCode errorCode) {
+    public ScmsAdminException(ErrorCode errorCode, String message) {
         super(message);
         this.errorCode = errorCode;
     }

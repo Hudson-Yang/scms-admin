@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonPropertyOrder({"stat", "err", "desc"})
+@JsonPropertyOrder({"stat", "err", "data"})
 @Getter
 @Setter
 public class BaseResponse {
