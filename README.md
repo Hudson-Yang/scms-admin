@@ -12,9 +12,9 @@
 
 ## 3. 주요 기능
 - 로그인 (Session 기반 인증)
-- 권한 관리 (READ ~ DELETE 계층 구조)
-- 콘텐츠 CRUD
-- 다국어 콘텐츠 관리
+- 관리자 권한별 기능 접근 제어
+- 콘텐츠 등록 / 수정 / 삭제 / 조회 (CRUD)
+- 국가 / 언어 기준 다국어 콘텐츠 관리
 
 ## 4. 아키텍처
 - Backend: Spring Boot (REST API)
@@ -22,10 +22,10 @@
 - DB: MySQL
 
 ## 5. 핵심 설계
-- 권한 계층 구조 (상위 권한이 하위 권한 포함)
-  - READ < CREATE < UPDATE < DELETE
-- 콘텐츠 - 국가 - 언어 관계 설계
+- 권한 계층 구조 설계 (READ < CREATE < UPDATE < DELETE)
+- 콘텐츠 - 국가 - 언어 분리 모델링 (다국어 확장 고려)
 - React + Spring Boot 통합 배포 구조
+- 세션 기반 인증 및 권한 검증을 API 레이어에서 일관되게 처리
 
 ## DB 스키마
 - `docs/schema.sql` 파일에 전체 테이블 정의가 포함되어 있습니다.
