@@ -24,8 +24,10 @@ export default function LoginPage() {
     mutationFn: login,
     onSuccess: async () => {
       try {
+        // 로그인 성공 후 현재 사용자 정보를 다시 조회해 전역 인증 상태를 갱신
         await refreshMe();
 
+        // 전역 message 인스턴스를 사용하므로 페이지 이동 후에도 메시지가 유지됨
         message.success("로그인되었습니다.");
 
         navigate(from, { replace: true });
@@ -47,11 +49,18 @@ export default function LoginPage() {
     <div className="auth-page">
       <Card className="auth-card">
         <Space direction="vertical" size={20} style={{ width: "100%" }}>
-          <div>
-            <Title level={3} style={{ marginBottom: 8 }}>
-              Admin Login
-            </Title>
-            <Text type="secondary">SCMS Admin CMS 로그인</Text>
+          <div className="auth-page__header">
+            {/* 로그인/회원가입 화면에서도 홈으로 돌아갈 수 있도록 브랜드 링크 제공 */}
+            <Link to="/" className="auth-page__brand">
+              Smartphone CMS Admin
+            </Link>
+
+            <div className="auth-page__title-wrap">
+              <Title level={3} style={{ marginBottom: 8 }}>
+                Admin Login
+              </Title>
+              <Text type="secondary">SCMS Admin CMS 로그인</Text>
+            </div>
           </div>
 
           <Form<LoginRequest>

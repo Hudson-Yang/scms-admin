@@ -14,6 +14,29 @@
   box-shadow: 0 10px 30px rgba(47, 79, 143, 0.08);
 }
 
+.auth-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-page__brand {
+  color: #2f4f8f;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+.auth-page__brand:hover {
+  color: #3b5ca0;
+}
+
+.auth-page__title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
 .auth-page__footer {
   text-align: center;
 }

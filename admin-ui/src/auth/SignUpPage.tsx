@@ -44,11 +44,18 @@ export default function SignUpPage() {
     <div className="auth-page">
       <Card className="auth-card" style={{ width: 460 }}>
         <Space direction="vertical" size={20} style={{ width: "100%" }}>
-          <div>
-            <Title level={3} style={{ marginBottom: 8 }}>
-              Admin Sign Up
-            </Title>
-            <Text type="secondary">SCMS Admin CMS 관리자 계정 생성</Text>
+          <div className="auth-page__header">
+            {/* 회원가입 화면에서도 홈으로 쉽게 이동할 수 있도록 브랜드 링크 제공 */}
+            <Link to="/" className="auth-page__brand">
+              Smartphone CMS Admin
+            </Link>
+
+            <div className="auth-page__title-wrap">
+              <Title level={3} style={{ marginBottom: 8 }}>
+                Admin Sign Up
+              </Title>
+              <Text type="secondary">SCMS Admin CMS 관리자 계정 생성</Text>
+            </div>
           </div>
 
           <Form<SignUpFormValues>
