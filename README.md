@@ -48,7 +48,7 @@ CREATE DATABASE scms DEFAULT CHARACTER SET utf8mb4;
 ### 2) 테이블 생성
 
 ```bash
-mysql -u root -p scms < docs/schema.sql
+mysql -u root -p 0123 < docs/schema.sql
 ```
 
 > DB 스키마는 docs/schema.sql 파일을 참고
