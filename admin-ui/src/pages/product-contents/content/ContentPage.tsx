@@ -1,68 +1,72 @@
-import { Button, Table, Input } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-
-import { getContentList } from "./api/contentApi";
-import type { Content } from "./types/ContentType";
-
+import { Button, Input, Table } from "antd";
+import useAuth from "../../../auth/useAuth";
 import "./ContentPage.css";
 
-const { Search } = Input;
-
 const ContentPage = () => {
-  const [searchText, setSearchText] = useState("");
+  /*
+    canReadContent
+    - 목록 페이지 접근 권한
+    - 현재 정책상 비로그인도 READ로 처리 → true
+  */
+  const { canReadContent, canCreateContent } = useAuth();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["contents"],
-    queryFn: getContentList,
-  });
-
-  const columns: ColumnsType<Content> = [
-    {
-      title: "Content ID",
-      dataIndex: "prodContsId",
-      key: "prodContsId",
-    },
-    {
-      title: "Display Name",
-      dataIndex: "admnDispNm",
-      key: "admnDispNm",
-    },
-    {
-      title: "Modified By",
-      dataIndex: "mdfrId",
-      key: "mdfrId",
-    },
-    {
-      title: "Last Updated",
-      dataIndex: "mdfDt",
-      key: "mdfDt",
-    },
-  ];
+  /*
+    나중에 권한 정책 강화 시 대비
+  */
+  if (!canReadContent) {
+    return <div>접근 권한이 없습니다.</div>;
+  }
 
   return (
     <div className="content-page">
-      <h2 className="content-page__title">Content</h2>
-
-      <div className="content-page__actions">
-        <Search
-          placeholder="Search by ID or Display Name"
-          allowClear
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ width: 300 }}
-        />
-
-        <Button type="primary">New Content</Button>
+      <div className="content-page__header">
+        <h1 className="content-page__title">Content</h1>
       </div>
 
-      <div className="content-page__table">
+      {/* 🔥 핵심: toolbar를 좌/우 영역으로 분리 */}
+      <div className="content-page__toolbar">
+        {/* 왼쪽: 검색 */}
+        <div className="content-page__toolbar-left">
+          <Input.Search
+            placeholder="Search by ID or Display Name"
+            className="content-page__search"
+          />
+        </div>
+
+        {/* 오른쪽: 버튼 영역 */}
+        <div className="content-page__toolbar-right">
+          {/* CREATE 이상 권한일 때만 신규 등록 버튼 표시 */}
+          {canCreateContent && <Button type="primary">New Content</Button>}
+        </div>
+      </div>
+
+      <div className="content-page__table-wrap">
         <Table
-          columns={columns}
-          dataSource={data}
           rowKey="prodContsId"
-          loading={isLoading}
-          pagination={{ pageSize: 10 }}
+          dataSource={[]}
+          columns={[
+            {
+              title: "Content ID",
+              dataIndex: "prodContsId",
+              key: "prodContsId",
+            },
+            {
+              title: "Display Name",
+              dataIndex: "admnDispNm",
+              key: "admnDispNm",
+            },
+            {
+              title: "Modified By",
+              dataIndex: "mdfrId",
+              key: "mdfrId",
+            },
+            {
+              title: "Last Updated",
+              dataIndex: "mdfDt",
+              key: "mdfDt",
+            },
+          ]}
+          pagination={false}
         />
       </div>
     </div>
