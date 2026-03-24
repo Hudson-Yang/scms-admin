@@ -1,6 +1,7 @@
 import { Button, Input, Table } from "antd";
-import useAuth from "../../../auth/useAuth";
-import "./ContentPage.css";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../../../auth/useAuth";
+import "./ContentListPage.css";
 
 const ContentPage = () => {
   /*
@@ -8,6 +9,7 @@ const ContentPage = () => {
     - 목록 페이지 접근 권한
     - 현재 정책상 비로그인도 READ로 처리 → true
   */
+  const navigate = useNavigate();
   const { canReadContent, canCreateContent } = useAuth();
 
   /*
@@ -23,7 +25,7 @@ const ContentPage = () => {
         <h1 className="content-page__title">Content</h1>
       </div>
 
-      {/* 🔥 핵심: toolbar를 좌/우 영역으로 분리 */}
+      {/* toolbar를 좌/우 영역으로 분리 */}
       <div className="content-page__toolbar">
         {/* 왼쪽: 검색 */}
         <div className="content-page__toolbar-left">
@@ -36,7 +38,14 @@ const ContentPage = () => {
         {/* 오른쪽: 버튼 영역 */}
         <div className="content-page__toolbar-right">
           {/* CREATE 이상 권한일 때만 신규 등록 버튼 표시 */}
-          {canCreateContent && <Button type="primary">New Content</Button>}
+          {canCreateContent && (
+            <Button
+              type="primary"
+              onClick={() => navigate("/product-content/content/new")}
+            >
+              New Content
+            </Button>
+          )}
         </div>
       </div>
 
