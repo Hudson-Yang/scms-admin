@@ -58,6 +58,20 @@
 
 .new-content-page__actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between; /* 좌/우 분리 핵심 */
+  align-items: center;
   margin-top: 24px;
+}
+
+.new-content-page__actions-left {
+  display: flex;
+}
+
+.new-content-page__actions-right {
+  display: flex;
+}
+
+.required {
+  color: #ff4d4f;
+  margin-left: 4px;
 }
