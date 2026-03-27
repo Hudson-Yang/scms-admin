@@ -11,36 +11,45 @@ import {
   Tabs,
   Typography,
 } from "antd";
+import { CloseCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/auth/useAuth";
 import "./NewContentPage.css";
 
 const { Title, Text } = Typography;
 
+// 나중에 api에서 메타데이터 받아서 쓰기
 const languageOptions = [
   { label: "English (en_US)", value: "en_US" },
   { label: "Korean (ko_KR)", value: "ko_KR" },
   { label: "Japanese (ja_JP)", value: "ja_JP" },
 ];
 
+type LanguageRow = {
+  dfltLangYn?: boolean;
+  langCd?: string;
+  prodContsTitl?: string;
+  prodContsDesc?: string;
+};
+
 const NewContentPage = () => {
   const navigate = useNavigate();
   const { canCreateContent } = useAuth();
   const [form] = Form.useForm();
+  const watchedLanguageList = Form.useWatch("languageList", form) || [];
 
   /*
     권한 방어
-    - 목록에서 버튼을 숨겨도 URL 직접 접근은 가능하므로
-      페이지 내부에서도 한 번 더 체크
+    - URL 직접 접근까지 고려해서 페이지 내부에서도 한 번 더 차단
   */
   if (!canCreateContent) {
     return <div>등록 권한이 없습니다.</div>;
   }
 
   /*
-    임시 저장
-    - 지금은 화면 단계이므로 콘솔 출력만 수행
-    - 나중에 create API 연결 시 여기서 validate 후 요청
+    저장
+    - 현재는 화면 단계이므로 validate + console 확인만 수행
+    - 나중에 create API 연결 시 이 부분에서 요청
   */
   const handleSave = async () => {
     const values = await form.validateFields();
@@ -48,25 +57,86 @@ const NewContentPage = () => {
   };
 
   /*
-    기본 언어 변경 함수
-    - Radio는 한 행만 선택되도록 보여주지만,
-      실제 form 값의 dfltLangYn도 함께 맞춰줘야 함
-    - 선택한 index만 true, 나머지는 false로 변경
+  handleCancel
+  - 페이지 이동이 아니라 현재 Form 값을 초기 상태로 되돌림
+  - antd Form의 resetFields()는 initialValues 기준으로 전체 폼을 복원
+*/
+  const handleCancel = () => {
+    form.resetFields();
+  };
+
+  /*
+    기본 언어 변경
+    - 선택한 index만 true
+    - 나머지 행은 false
+    - 즉, 기본 언어는 항상 한 행만 유지
   */
   const handleChangeDefaultLanguage = (selectedIndex: number) => {
-    const languageList = form.getFieldValue("languageList") || [];
+    const languageList: LanguageRow[] =
+      form.getFieldValue("languageList") || [];
 
-    const nextLanguageList = languageList.map(
-      (item: Record<string, unknown>, index: number) => ({
-        ...item,
-        dfltLangYn: index === selectedIndex,
-      }),
-    );
+    const nextLanguageList = languageList.map((item, index) => ({
+      ...item,
+      dfltLangYn: index === selectedIndex,
+    }));
 
     form.setFieldsValue({
       languageList: nextLanguageList,
     });
   };
+
+  /*
+    현재 행에서 선택 가능한 언어 옵션 계산
+    - 다른 행에서 이미 선택한 언어는 숨김
+    - 단, "현재 행에 이미 선택된 값"은 유지해야 하므로 예외 허용
+  */
+  const getAvailableLanguageOptions = (currentIndex: number) => {
+    const languageList: LanguageRow[] =
+      form.getFieldValue("languageList") || [];
+    const currentValue = languageList[currentIndex]?.langCd;
+
+    const selectedValues = languageList
+      .map((item) => item?.langCd)
+      .filter(Boolean);
+
+    return languageOptions.filter((option) => {
+      // 현재 행의 현재 선택값은 보여줘야 함
+      if (option.value === currentValue) {
+        return true;
+      }
+
+      // 다른 행에서 이미 선택한 언어면 제외
+      return !selectedValues.includes(option.value);
+    });
+  };
+
+  /*
+    새 행 추가 시 기본값 계산
+    - 이미 선택된 언어를 제외한 "첫 번째 가능한 언어"를 자동 선택
+    - 예:
+      en_US 사용 중이면 ko_KR
+      en_US, ko_KR 사용 중이면 ja_JP
+  */
+  const getNextDefaultLanguageValue = () => {
+    const languageList: LanguageRow[] =
+      form.getFieldValue("languageList") || [];
+
+    const selectedValues = languageList
+      .map((item) => item?.langCd)
+      .filter(Boolean);
+
+    const firstAvailableOption = languageOptions.find(
+      (option) => !selectedValues.includes(option.value),
+    );
+
+    return firstAvailableOption?.value;
+  };
+
+  const hasRemainingLanguageOption = languageOptions.some((option) => {
+    return !watchedLanguageList.some(
+      (item: { langCd?: string }) => item?.langCd === option.value,
+    );
+  });
 
   const languageTab = (
     <div className="new-content-page__tab-panel">
@@ -87,132 +157,105 @@ const NewContentPage = () => {
           Description
         </div>
 
-        <div className="new-content-page__lang-header-cell new-content-page__lang-header-cell--action">
-          Action
-        </div>
+        <div className="new-content-page__lang-header-cell new-content-page__lang-header-cell--action" />
       </div>
 
       <Form.List name="languageList">
         {(fields, { add, remove }) => (
           <>
-            {fields.map((field, index) => (
-              <div className="new-content-page__lang-row" key={field.key}>
-                <div className="new-content-page__lang-cell new-content-page__lang-cell--default">
-                  {/* Radio.Group 대신 각 행 Radio + onChange 방식으로 처리
-                      이유:
-                      현재 화면 구조가 행 단위 그리드라서 구현이 단순함 */}
-                  <Radio
-                    checked={
-                      form.getFieldValue([
-                        "languageList",
-                        index,
-                        "dfltLangYn",
-                      ]) === true
-                    }
-                    onChange={() => handleChangeDefaultLanguage(index)}
-                  />
+            {fields.map((field, index) => {
+              const currentRow: LanguageRow =
+                form.getFieldValue(["languageList", index]) || {};
 
-                  {/* 실제 form 값과 연결되는 숨김용 필드
-                      Radio 표시값과 저장값을 동기화하기 위해 유지 */}
-                  <Form.Item name={[field.name, "dfltLangYn"]} hidden>
-                    <Input />
-                  </Form.Item>
+              const availableOptions = getAvailableLanguageOptions(index);
+              const isDefaultRow = currentRow?.dfltLangYn === true;
+
+              return (
+                <div className="new-content-page__lang-row" key={field.key}>
+                  <div className="new-content-page__lang-cell new-content-page__lang-cell--default">
+                    <Radio
+                      checked={isDefaultRow}
+                      onChange={() => handleChangeDefaultLanguage(index)}
+                    />
+
+                    {/* 실제 form 값과 연결되는 숨김 필드 */}
+                    <Form.Item name={[field.name, "dfltLangYn"]} hidden>
+                      <Input />
+                    </Form.Item>
+                  </div>
+
+                  <div className="new-content-page__lang-cell new-content-page__lang-cell--language">
+                    <Form.Item
+                      name={[field.name, "langCd"]}
+                      rules={[
+                        { required: true, message: "언어를 선택해주세요." },
+                      ]}
+                      className="new-content-page__form-item"
+                    >
+                      <Select
+                        options={availableOptions}
+                        placeholder="Language"
+                      />
+                    </Form.Item>
+                  </div>
+
+                  <div className="new-content-page__lang-cell new-content-page__lang-cell--title">
+                    <Form.Item
+                      name={[field.name, "prodContsTitl"]}
+                      rules={[
+                        { required: true, message: "제목을 입력해주세요." },
+                      ]}
+                      className="new-content-page__form-item"
+                    >
+                      <Input placeholder="Title" />
+                    </Form.Item>
+                  </div>
+
+                  <div className="new-content-page__lang-cell new-content-page__lang-cell--description">
+                    <Form.Item
+                      name={[field.name, "prodContsDesc"]}
+                      className="new-content-page__form-item"
+                    >
+                      <Input placeholder="Description" />
+                    </Form.Item>
+                  </div>
+
+                  <div className="new-content-page__lang-cell new-content-page__lang-cell--action">
+                    {!isDefaultRow && (
+                      <Button
+                        type="text"
+                        danger
+                        icon={<CloseCircleOutlined />}
+                        onClick={() => {
+                          if (fields.length === 1) {
+                            return;
+                          }
+                          remove(field.name);
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
-
-                <div className="new-content-page__lang-cell new-content-page__lang-cell--language">
-                  <Form.Item
-                    name={[field.name, "langCd"]}
-                    rules={[
-                      { required: true, message: "언어를 선택해주세요." },
-                    ]}
-                    className="new-content-page__form-item"
-                  >
-                    <Select options={languageOptions} />
-                  </Form.Item>
-                </div>
-
-                <div className="new-content-page__lang-cell new-content-page__lang-cell--title">
-                  <Form.Item
-                    name={[field.name, "prodContsTitl"]}
-                    rules={[
-                      { required: true, message: "제목을 입력해주세요." },
-                    ]}
-                    className="new-content-page__form-item"
-                  >
-                    <Input placeholder="Title" />
-                  </Form.Item>
-                </div>
-
-                <div className="new-content-page__lang-cell new-content-page__lang-cell--description">
-                  <Form.Item
-                    name={[field.name, "prodContsDesc"]}
-                    className="new-content-page__form-item"
-                  >
-                    <Input placeholder="Description" />
-                  </Form.Item>
-                </div>
-
-                <div className="new-content-page__lang-cell new-content-page__lang-cell--action">
-                  <Button
-                    danger
-                    onClick={() => {
-                      /*
-                        마지막 1개 행은 삭제 금지
-                        - 언어 행이 0개가 되면 화면/저장 구조가 어색해짐
-                      */
-                      if (fields.length === 1) {
-                        return;
-                      }
-
-                      const currentLanguageList =
-                        form.getFieldValue("languageList") || [];
-
-                      const removedIsDefault =
-                        currentLanguageList[index]?.dfltLangYn === true;
-
-                      remove(field.name);
-
-                      /*
-                        기본 언어였던 행을 삭제한 경우
-                        - 삭제 후 첫 번째 행을 기본 언어로 다시 지정
-                        - setTimeout을 둔 이유:
-                          remove 후 form 내부 배열 반영 타이밍 뒤에 맞추기 위해서
-                      */
-                      if (removedIsDefault) {
-                        setTimeout(() => {
-                          const nextLanguageList =
-                            form.getFieldValue("languageList") || [];
-
-                          const normalized = nextLanguageList.map(
-                            (item: Record<string, unknown>, idx: number) => ({
-                              ...item,
-                              dfltLangYn: idx === 0,
-                            }),
-                          );
-
-                          form.setFieldsValue({
-                            languageList: normalized,
-                          });
-                        }, 0);
-                      }
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
 
             <div className="new-content-page__lang-add">
               <Button
-                onClick={() =>
+                onClick={() => {
+                  const nextLangCd = getNextDefaultLanguageValue();
+
+                  if (!nextLangCd) {
+                    return;
+                  }
+
                   add({
                     dfltLangYn: false,
-                    langCd: undefined,
+                    langCd: nextLangCd,
                     prodContsTitl: "",
                     prodContsDesc: "",
-                  })
-                }
+                  });
+                }}
+                disabled={!hasRemainingLanguageOption}
               >
                 Add Language
               </Button>
@@ -274,26 +317,25 @@ const NewContentPage = () => {
               },
             ]}
           />
-
-          <div className="new-content-page__actions">
-            <div className="new-content-page__actions-left">
-              <Button onClick={() => navigate("/product-content/content")}>
-                List
-              </Button>
-            </div>
-
-            <div className="new-content-page__actions-right">
-              <Space>
-                <Button type="primary" onClick={handleSave}>
-                  Save
-                </Button>
-
-                <Button>Cancel</Button>
-              </Space>
-            </div>
-          </div>
         </Form>
       </Card>
+      <div className="new-content-page__actions">
+        <div className="new-content-page__actions-left">
+          <Button onClick={() => navigate("/product-content/content")}>
+            List
+          </Button>
+        </div>
+
+        <div className="new-content-page__actions-right">
+          <Space>
+            <Button type="primary" onClick={handleSave}>
+              Save
+            </Button>
+
+            <Button onClick={handleCancel}>Cancel</Button>
+          </Space>
+        </div>
+      </div>
     </div>
   );
 };
