@@ -2,6 +2,8 @@ import { Button, Input, Table } from "antd";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../../auth/useAuth";
 import "./ContentListPage.css";
+import { useQuery } from "@tanstack/react-query";
+import { getContentList } from "../api/contentApi";
 
 const ContentPage = () => {
   /*
@@ -11,6 +13,11 @@ const ContentPage = () => {
   */
   const navigate = useNavigate();
   const { canReadContent, canCreateContent } = useAuth();
+
+  const { data } = useQuery({
+    queryKey: ["contents"],
+    queryFn: getContentList,
+  });
 
   /*
     나중에 권한 정책 강화 시 대비
@@ -52,7 +59,7 @@ const ContentPage = () => {
       <div className="content-page__table-wrap">
         <Table
           rowKey="prodContsId"
-          dataSource={[]}
+          dataSource={data}
           columns={[
             {
               title: "Content ID",

@@ -8,3 +8,7 @@ export const getContentList = async (): Promise<Content[]> => {
   );
   return response.data.data;
 };
+
+export const saveContent = async (request: Content): Promise<void> => {
+  await apiClient.post("/product-content/content", request);
+};

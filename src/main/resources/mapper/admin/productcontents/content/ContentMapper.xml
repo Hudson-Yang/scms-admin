@@ -15,9 +15,13 @@
 		INSERT INTO scms_prod_conts_l (
 			admn_disp_nm,
 			regr_id,
-			reg_dt
+			reg_dt,
+			mdfr_id,
+			mdf_dt
 		) VALUES (
 			#{admnDispNm},
+			#{regrId},
+			NOW(),
 			#{regrId},
 			NOW()
 		)

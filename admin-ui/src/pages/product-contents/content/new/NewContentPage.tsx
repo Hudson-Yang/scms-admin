@@ -4,6 +4,7 @@ import {
   Col,
   Form,
   Input,
+  message,
   Radio,
   Row,
   Select,
@@ -11,9 +12,11 @@ import {
   Tabs,
   Typography,
 } from "antd";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/auth/useAuth";
+import { saveContent } from "../api/contentApi";
 import "./NewContentPage.css";
 
 const { Title, Text } = Typography;
@@ -25,6 +28,7 @@ const languageOptions = [
   { label: "Japanese (ja_JP)", value: "ja_JP" },
 ];
 
+// type 분리하기
 type LanguageRow = {
   dfltLangYn?: boolean;
   langCd?: string;
@@ -34,26 +38,35 @@ type LanguageRow = {
 
 const NewContentPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { canCreateContent } = useAuth();
   const [form] = Form.useForm();
   const watchedLanguageList = Form.useWatch("languageList", form) || [];
 
-  /*
-    권한 방어
-    - URL 직접 접근까지 고려해서 페이지 내부에서도 한 번 더 차단
-  */
   if (!canCreateContent) {
-    return <div>등록 권한이 없습니다.</div>;
+    navigate("/product-content/content");
   }
 
-  /*
-    저장
-    - 현재는 화면 단계이므로 validate + console 확인만 수행
-    - 나중에 create API 연결 시 이 부분에서 요청
-  */
+  const save = useMutation({
+    mutationFn: saveContent,
+    onSuccess: () => {
+      message.success("저장 성공하였습니다.");
+
+      queryClient.invalidateQueries({ queryKey: ["contents"] });
+
+      navigate("/product-content/content");
+    },
+    onError: () => {
+      message.error("저장에 실패했습니다.");
+    },
+  });
+
   const handleSave = async () => {
     const values = await form.validateFields();
-    console.log("new content form values", values);
+    values.languageList.forEach(
+      (lang) => (lang.dfltLangYn = lang.dfltLangYn ? "Y" : "N"),
+    );
+    save.mutate(values);
   };
 
   /*
