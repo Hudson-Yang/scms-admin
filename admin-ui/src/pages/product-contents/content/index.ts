@@ -1,5 +1,6 @@
 export { default as ContentListPage } from "./list/ContentListPage";
 export { default as NewContentPage } from "./new/NewContentPage";
+export { default as DetailContentPage } from "./detail/DetailContentPage";
 
 /*
   re-export 설명

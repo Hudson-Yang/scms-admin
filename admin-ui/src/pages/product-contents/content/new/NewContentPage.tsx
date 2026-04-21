@@ -69,11 +69,6 @@ const NewContentPage = () => {
     save.mutate(values);
   };
 
-  /*
-  handleCancel
-  - 페이지 이동이 아니라 현재 Form 값을 초기 상태로 되돌림
-  - antd Form의 resetFields()는 initialValues 기준으로 전체 폼을 복원
-*/
   const handleCancel = () => {
     form.resetFields();
   };

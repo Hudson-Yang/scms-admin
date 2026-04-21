@@ -12,3 +12,13 @@ export const getContentList = async (): Promise<Content[]> => {
 export const saveContent = async (request: Content): Promise<void> => {
   await apiClient.post("/product-content/content", request);
 };
+
+export const getContentDetail = async (
+  prodContsId: string,
+): Promise<ApiResponse<Content>> => {
+  const response = await apiClient.get(
+    `/product-content/content/${prodContsId}`,
+  );
+
+  return response.data;
+};

@@ -26,6 +26,12 @@ const ContentPage = () => {
     return <div>접근 권한이 없습니다.</div>;
   }
 
+  const onRow = (record) => ({
+    onClick: () => {
+      navigate(`/product-content/content/${record.prodContsId}`);
+    },
+  });
+
   return (
     <div className="content-page">
       <div className="content-page__header">
@@ -60,6 +66,7 @@ const ContentPage = () => {
         <Table
           rowKey="prodContsId"
           dataSource={data}
+          onRow={onRow}
           columns={[
             {
               title: "Content ID",

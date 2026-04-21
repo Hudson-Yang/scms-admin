@@ -5,6 +5,7 @@ import ProductContentLayout from "../pages/product-contents/ProductContentLayout
 import {
   ContentListPage,
   NewContentPage,
+  DetailContentPage,
 } from "../pages/product-contents/content";
 import LoginPage from "../auth/LoginPage";
 import SignUpPage from "../auth/SignUpPage";
@@ -25,6 +26,7 @@ const AppRouter = () => {
           <Route index element={<Navigate to="content" replace />} />
           <Route path="content" element={<ContentListPage />} />
           <Route path="content/new" element={<NewContentPage />} />
+          <Route path="content/:prodContsId" element={<DetailContentPage />} />
         </Route>
       </Route>
     </Routes>
