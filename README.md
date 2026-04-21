@@ -88,10 +88,17 @@ http://localhost:8080 접속
 ### 6) 인증 방식
 
 - Session 기반 인증 (JSESSIONID)
-- React 요청 시 아래 옵션 필요
+- 로그인 성공 시 서버에서 세션 생성 및 쿠키 발급
+- 이후 모든 요청은 쿠키 기반으로 인증 처리
+- React에서는 `withCredentials: true` 옵션을 통해 세션 쿠키를 포함하여 요청
 
 ```javascript
-fetch("/api/auth/me", {
-  credentials: "include"
+const apiClient = axios.create({
+  baseURL: "/admin",
+  withCredentials: true,
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 ```
