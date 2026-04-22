@@ -62,7 +62,8 @@ public class AuthController {
 
         if (principal instanceof AdminUserDetails userDetails) {
             UserModel user = userDetails.getUser();
-            MeResponse response = new MeResponse(user.getName(), user.getRoleCd());
+            MeResponse response =
+                    new MeResponse(user.getLoginId(), user.getName(), user.getRoleCd());
             return new BaseResponse(response);
         }
 

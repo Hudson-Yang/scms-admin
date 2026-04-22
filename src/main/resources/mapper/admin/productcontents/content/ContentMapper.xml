@@ -9,6 +9,7 @@
 			mdfr_id,
 			mdf_dt
 		FROM scms_prod_conts_l
+		ORDER BY mdf_dt DESC
 	</select>
 	
 	<insert id="insertContent" parameterType="com.hong.scms.admin.productcontents.content.model.ContentModel" useGeneratedKeys="true" keyProperty="prodContsId">
@@ -36,6 +37,16 @@
 			mdfr_id,
 			mdf_dt
 		FROM scms_prod_conts_l
+		WHERE prod_conts_id = #{prodContsId}
+	</select>
+	
+	<select id="selectContentLanguageList" parameterType="Integer" resultType="com.hong.scms.admin.productcontents.content.model.ContentLanguageModel">
+		SELECT
+			lang_cd,
+			prod_conts_titl,
+			prod_conts_desc,
+			dflt_lang_yn
+		FROM scms_prod_conts_lang_l
 		WHERE prod_conts_id = #{prodContsId}
 	</select>
 

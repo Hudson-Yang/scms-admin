@@ -23,12 +23,14 @@ public class ContentService {
     @Transactional
     public void createContent(ContentModel contentModel) {
         contentMapper.insertContent(contentModel);
-
         contentMapper.insertContentLanguageList(contentModel);
     }
 
     public ContentModel getContent(Integer prodContsId) {
-        return contentMapper.selectContent(prodContsId);
+        ContentModel detail = new ContentModel();
+        detail = contentMapper.selectContent(prodContsId);
+        detail.setLanguageList(contentMapper.selectContentLanguageList(prodContsId));
+        return detail;
     }
 
     @Transactional
@@ -47,8 +49,11 @@ public class ContentService {
     public void saveContentLanguageList(ContentModel contentModel) {
         List<ContentLanguageModel> languageList = contentModel.getLanguageList();
 
-        if (languageList == null || languageList.isEmpty())
+        if (languageList == null || languageList.isEmpty()) {
             return;
+        }
+
+        languageList.forEach(l -> l.setProdContsId(contentModel.getProdContsId()));
 
         languageList.stream().filter(l -> "D".equals(l.getSaveFlag()))
                 .forEach(contentMapper::deleteContentLanguage);

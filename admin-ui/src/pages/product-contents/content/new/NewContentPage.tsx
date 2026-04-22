@@ -19,6 +19,8 @@ import useAuth from "@/auth/useAuth";
 import { saveContent } from "../api/contentApi";
 import "./NewContentPage.css";
 
+import type { LanguageRow } from "../types/ContentType";
+
 const { Title, Text } = Typography;
 
 // 나중에 api에서 메타데이터 받아서 쓰기
@@ -27,14 +29,6 @@ const languageOptions = [
   { label: "Korean (ko_KR)", value: "ko_KR" },
   { label: "Japanese (ja_JP)", value: "ja_JP" },
 ];
-
-// type 분리하기
-type LanguageRow = {
-  dfltLangYn?: boolean;
-  langCd?: string;
-  prodContsTitl?: string;
-  prodContsDesc?: string;
-};
 
 const NewContentPage = () => {
   const navigate = useNavigate();

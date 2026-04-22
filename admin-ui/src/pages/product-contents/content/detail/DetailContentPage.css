@@ -39,11 +39,72 @@
 }
 
 .detail-content-page__lang-row {
+  position: relative;
   display: grid;
   grid-template-columns: 80px 220px 1fr 1.4fr 56px;
   gap: 12px;
   align-items: start;
-  padding: 16px 0 0;
+  padding: 16px 0 0 16px;
+  border-radius: 6px;
+  min-height: 72px;
+}
+
+/* ===== N ===== */
+
+.detail-content-page__lang-row--n {
+  background: #ffffff;
+}
+
+/* ===== I ===== */
+
+.detail-content-page__lang-row--i {
+  background: #f6ffed;
+}
+
+.detail-content-page__lang-row--i::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 4px;
+  background: #52c41a;
+}
+
+/* ===== U ===== */
+
+.detail-content-page__lang-row--u {
+  background: #fffbe6;
+}
+
+.detail-content-page__lang-row--u::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 4px;
+  background: #faad14;
+}
+
+/* ===== D ===== */
+
+.detail-content-page__lang-row--d {
+  background: #fff1f0;
+  opacity: 0.75;
+}
+
+.detail-content-page__lang-row--d::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 4px;
+  background: #ff4d4f;
 }
 
 .detail-content-page__lang-cell {

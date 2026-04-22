@@ -7,10 +7,12 @@ import lombok.Setter;
 @Setter
 public class MeResponse {
 
+    private String loginId;
     private String name;
     private String roleCd;
 
-    public MeResponse(String name, String roleCd) {
+    public MeResponse(String loginId, String name, String roleCd) {
+        this.loginId = loginId;
         this.name = name;
         this.roleCd = roleCd;
     }

@@ -11,3 +11,10 @@ mybatis:
   type-aliases-package: com.hong.scms.admin
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    "[org.mybatis]": DEBUG
+    "[java.sql]": DEBUG
+    "[jdbc.sqlonly]": DEBUG

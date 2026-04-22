@@ -7,7 +7,9 @@ import com.hong.scms.admin.common.constant.ErrorCode;
 import com.hong.scms.admin.common.model.BaseResponse;
 import com.hong.scms.admin.common.model.ErrorResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -32,6 +34,8 @@ public class GlobalExceptionHandler {
     protected BaseResponse handleScmsAdminException(ScmsAdminException ex,
             HttpServletResponse response) {
 
+        log.error("Unhandled Admin Exception", ex);
+
         BaseResponse br = new BaseResponse();
         ErrorResponse err = new ErrorResponse(ex);
 
@@ -45,6 +49,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected BaseResponse handleGlobalException(Exception ex, HttpServletResponse response) {
+
+        log.error("Unhandled Global Exception", ex);
 
         BaseResponse br = new BaseResponse();
         ErrorResponse err = new ErrorResponse();

@@ -22,3 +22,12 @@ export const getContentDetail = async (
 
   return response.data;
 };
+
+export const updateContent = async (payload: Content) => {
+  const response = await apiClient.put(
+    `/product-content/content/${payload.prodContsId}`,
+    payload,
+  );
+
+  return response.data;
+};

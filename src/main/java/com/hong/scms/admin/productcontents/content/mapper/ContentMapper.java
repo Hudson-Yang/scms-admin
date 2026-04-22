@@ -13,6 +13,8 @@ public interface ContentMapper {
 
     ContentModel selectContent(Integer prodContsId);
 
+    List<ContentLanguageModel> selectContentLanguageList(Integer prodContsId);
+
     void updateContent(ContentModel contentModel);
 
     void deleteContent(Integer prodContsId);
