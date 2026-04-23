@@ -31,3 +31,11 @@ export const updateContent = async (payload: Content) => {
 
   return response.data;
 };
+
+export const deleteContent = async (prodContsId: string) => {
+  const response = await apiClient.delete(
+    `/product-content/content/${prodContsId}`,
+  );
+
+  return response.data;
+};

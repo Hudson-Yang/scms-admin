@@ -12,12 +12,17 @@ import {
   Tabs,
   message,
   Typography,
+  Modal,
 } from "antd";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { CloseCircleOutlined, UndoOutlined } from "@ant-design/icons";
-import { getContentDetail, updateContent } from "../api/contentApi";
+import {
+  getContentDetail,
+  updateContent,
+  deleteContent,
+} from "../api/contentApi";
 import "./DetailContentPage.css";
 
 import type { LanguageRow, Content } from "../types/ContentType";
@@ -114,16 +119,35 @@ const DetailContentPage = () => {
         })),
       };
 
-      console.log("save payload:", payload);
-
-      /*
-      실제 API 호출
-    */
       saveContentMutation.mutate(payload);
     } catch (error) {
       console.error(error);
       message.error("입력값을 확인해주세요.");
     }
+  };
+
+  const handleDelete = () => {
+    Modal.confirm({
+      title: "Content를 삭제하시겠습니까?",
+      content: "삭제 후 복구할 수 없습니다.",
+
+      okText: "Delete",
+      cancelText: "Cancel",
+      okType: "danger",
+      onOk: async () => {
+        try {
+          await deleteContent(prodContsId!);
+
+          message.success("삭제되었습니다.");
+
+          navigate("/product-content/content");
+        } catch (error) {
+          console.error(error);
+
+          message.error("삭제에 실패했습니다.");
+        }
+      },
+    });
   };
 
   const handleCancel = () => {
@@ -578,6 +602,10 @@ const DetailContentPage = () => {
         <div className="detail-content-page__actions-right">
           {canWrite && (
             <Space>
+              <Button danger onClick={handleDelete}>
+                Delete
+              </Button>
+
               <Button type="primary" onClick={handleSave}>
                 Save
               </Button>
