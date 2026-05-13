@@ -19,11 +19,21 @@ import useAuth from "@/auth/useAuth";
 import { saveContent } from "../api/contentApi";
 import "./NewContentPage.css";
 
-import type { LanguageRow } from "../types/ContentType";
+import type { Content, LanguageRow } from "../types/ContentType";
 
 const { Title, Text } = Typography;
 
 // 나중에 api에서 메타데이터 받아서 쓰기
+type ValidContentFormValues = {
+  admnDispNm: string;
+  languageList: Array<
+    LanguageRow & {
+      langCd: string;
+      prodContsTitl: string;
+    }
+  >;
+};
+
 const languageOptions = [
   { label: "English (en_US)", value: "en_US" },
   { label: "Korean (ko_KR)", value: "ko_KR" },
@@ -56,11 +66,18 @@ const NewContentPage = () => {
   });
 
   const handleSave = async () => {
-    const values = await form.validateFields();
-    values.languageList.forEach(
-      (lang) => (lang.dfltLangYn = lang.dfltLangYn ? "Y" : "N"),
-    );
-    save.mutate(values);
+    const values = (await form.validateFields()) as ValidContentFormValues;
+    const payload: Content = {
+      admnDispNm: values.admnDispNm,
+      languageList: values.languageList.map((lang) => ({
+        langCd: lang.langCd,
+        prodContsTitl: lang.prodContsTitl,
+        prodContsDesc: lang.prodContsDesc,
+        dfltLangYn: lang.dfltLangYn ? "Y" : "N",
+      })),
+    };
+
+    save.mutate(payload);
   };
 
   const handleCancel = () => {

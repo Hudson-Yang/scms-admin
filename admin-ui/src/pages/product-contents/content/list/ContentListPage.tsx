@@ -4,6 +4,7 @@ import useAuth from "../../../../auth/useAuth";
 import "./ContentListPage.css";
 import { useQuery } from "@tanstack/react-query";
 import { getContentList } from "../api/contentApi";
+import type { Content } from "../types/ContentType";
 
 const ContentPage = () => {
   /*
@@ -26,7 +27,7 @@ const ContentPage = () => {
     return <div>접근 권한이 없습니다.</div>;
   }
 
-  const onRow = (record) => ({
+  const onRow = (record: Content) => ({
     onClick: () => {
       navigate(`/product-content/content/${record.prodContsId}`);
     },
