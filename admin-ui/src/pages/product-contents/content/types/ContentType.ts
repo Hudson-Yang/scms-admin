@@ -1,21 +1,21 @@
 export interface Content {
-  prodContsId: number;
+  prodContsId?: number;
   admnDispNm: string;
-  regrId: string;
-  regDt: string;
+  regrId?: string;
+  regDt?: string;
   mdfrId?: string;
   mdfDt?: string;
-  languageList: ContentLanguage[];
+  languageList?: ContentLanguage[];
 }
 
 export interface ContentLanguage {
-  prodContsId: number;
+  prodContsId?: number;
   langCd: string;
   prodContsTitl: string;
   prodContsDesc?: string;
   dfltLangYn: string;
-  regrId: string;
-  regDt: string;
+  regrId?: string;
+  regDt?: string;
   mdfrId?: string;
   mdfDt?: string;
   saveFlag?: SaveFlag;

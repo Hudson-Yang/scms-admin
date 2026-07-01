@@ -1,3 +1,4 @@
+import axios from "axios";
 import apiClient from "./apiClient";
 import type { ApiResponse } from "../types/ApiResponse";
 import type { LoginRequest, SignUpRequest, MeResponse } from "../types/auth";
@@ -18,11 +19,13 @@ export const getMe = async (): Promise<MeResponse | null> => {
   try {
     const response = await apiClient.get<ApiResponse<MeResponse>>("/auth/me");
     return response.data.data;
-  } catch (error: any) {
-    const status = error?.response?.status;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
 
-    if (status === 401 || status === 403) {
-      return null;
+      if (status === 401 || status === 403) {
+        return null;
+      }
     }
 
     throw error;

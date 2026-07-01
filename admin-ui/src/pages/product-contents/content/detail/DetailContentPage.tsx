@@ -31,6 +31,11 @@ import useAuth from "@/auth/useAuth";
 const { Title, Text } = Typography;
 
 // 나중에 api에서 메타데이터 받아서 쓰기
+type ValidLanguagePayloadRow = LanguageRow & {
+  langCd: string;
+  prodContsTitl: string;
+};
+
 const languageOptions = [
   { label: "English (en_US)", value: "en_US" },
   { label: "Korean (ko_KR)", value: "ko_KR" },
@@ -70,7 +75,7 @@ const DetailContentPage = () => {
     const content = data.data;
     form.setFieldsValue({
       admnDispNm: content.admnDispNm,
-      languageList: content.languageList.map((item) => ({
+      languageList: (content.languageList ?? []).map((item) => ({
         ...item,
         saveFlag: "N",
         dfltLangYn: item.dfltLangYn == "Y",
@@ -107,10 +112,12 @@ const DetailContentPage = () => {
         }
       }
 
+      const validLanguageList = changedLanguageList as ValidLanguagePayloadRow[];
+
       const payload: Content = {
-        prodContsId,
+        prodContsId: Number(prodContsId),
         admnDispNm: values.admnDispNm,
-        languageList: changedLanguageList.map((item) => ({
+        languageList: validLanguageList.map((item) => ({
           langCd: item.langCd,
           prodContsTitl: item.prodContsTitl,
           prodContsDesc: item.prodContsDesc,
@@ -155,7 +162,7 @@ const DetailContentPage = () => {
 
     form.setFieldsValue({
       admnDispNm: data.data.admnDispNm,
-      languageList: data.data.languageList.map((item) => ({
+      languageList: (data.data.languageList ?? []).map((item) => ({
         ...item,
         saveFlag: "N",
         dfltLangYn: item.dfltLangYn == "Y",
